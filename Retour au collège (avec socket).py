@@ -24,7 +24,7 @@ def joinChan(chan):
     ircmsg = ""
     while(ircmsg.find("End of /NAMES list.")==-1):
         ircmsg = connexion_serveur.recv(2048).decode("UTF-8")
-        ircmsg = ircmsg.strip('\n\r')
+        ircmsg = ircmsg.split('\n\r')
         print(ircmsg)
         
 def joinServer(server):
@@ -34,12 +34,12 @@ def joinServer(server):
     ircmsg = ""
     while(ircmsg.find('MODE Salxs')==-1):
         ircmsg = connexion_serveur.recv(2048).decode("UTF-8")
-        ircmsg = ircmsg.sprit('\n\r')
+        ircmsg = ircmsg.split('\n\r')
 
 def calcul(nombre1, nombre2):
     nombreModifie = math.pow(nombre1, 2)
     return int(nombre2 * nombreModifie)
 
-#On effectue le calcul 
+
 
 

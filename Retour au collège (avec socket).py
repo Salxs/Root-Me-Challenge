@@ -24,7 +24,7 @@ def joinChan(chan):
     ircmsg = ""
     while(ircmsg.find("End of /NAMES list.")==-1):
         ircmsg = connexion_serveur.recv(2048).decode("UTF-8")
-        ircmsg = ircmsg.strip('\n\r')
+        ircmsg = ircmsg.split('\n\r')
         print(ircmsg)
         
 def joinServer(server):
@@ -34,12 +34,34 @@ def joinServer(server):
     ircmsg = ""
     while(ircmsg.find('MODE Salxs')==-1):
         ircmsg = connexion_serveur.recv(2048).decode("UTF-8")
-        ircmsg = ircmsg.sprit('\n\r')
+        ircmsg = ircmsg.split('\n\r')
+
+def sendData(data):
+    connexion_serveur.send(data.encode("UTF-8"))
 
 def calcul(nombre1, nombre2):
     nombreModifie = math.pow(nombre1, 2)
     return int(nombre2 * nombreModifie)
 
-#On effectue le calcul 
+#Programme principal
+
+#Je rejoins le serveur et le channel du challenge
+joinServer(server)
+joinChan(channel)
+
+#Envoie d'un message au bot pour démarrer le challenge 
+connexion_serveur.sendData("PRIVMSG"+" "+botname+" "+"!ep1\r\n")
+
+#Récupération du message envoyé par le bot 
+while(1):
+    msg = connexion_serveur.recv(2048).decode("UTF-8")
+    if(msg != ""):
+        msg = msg.split("/")
+        nombre1 = int(msg[0])
+        nombre2 = int(msg[1])
+        resultat = str(calcul(nombre1, nombre2))
+        sendData("PRIVMSG !ep1 -rep "+resultat)
+        break
+
 
 

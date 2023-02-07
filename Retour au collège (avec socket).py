@@ -20,7 +20,7 @@ nick = "Salxs"
 botname = "Candy"
 
 def joinChan(chan):
-    connexion_serveur.send(bytes("JOIN" + chan + "\n", "UTF-8"))
+    connexion_serveur.sendall(bytes("JOIN" + chan + "\n", "UTF-8"))
     ircmsg = ""
     while(ircmsg.find("End of /NAMES list.")==-1):
         ircmsg = connexion_serveur.recv(2048).decode("UTF-8")
@@ -32,8 +32,8 @@ def joinChan(chan):
         
 def joinServer(server):
     connexion_serveur.connect((server, 6667))
-    connexion_serveur.send(bytes("USER "+ nick +" "+ nick +" "+ nick +" :This is a fun bot !\n", "UTF-8"))
-    connexion_serveur.send(bytes("NICK"+ nick+"\n","UTF-8"))
+    connexion_serveur.send(bytes("/USER "+ nick +" "+" :This is a fun bot !\n", "UTF-8"))
+    connexion_serveur.send(bytes("/NICK"+ nick+"\n","UTF-8"))
     ircmsg = ""
     while(ircmsg.find('MODE Salxs')==-1):
         ircmsg = connexion_serveur.recv(2048).decode("UTF-8")
@@ -61,15 +61,14 @@ joinChan(channel)
 connexion_serveur.sendData("PRIVMSG"+" "+botname+" "+"!ep1\r\n")
 
 #Récupération du message envoyé par le bot 
-while(1):
-    msg = connexion_serveur.recv(2048).decode("UTF-8")
-    if(msg != ""):
-        msg = msg.split("/")
-        nombre1 = int(msg[0])
-        nombre2 = int(msg[1])
-        resultat = str(calcul(nombre1, nombre2))
-        sendData("PRIVMSG !ep1 -rep "+resultat)
-        break
+msg = connexion_serveur.recv(2048).decode("UTF-8")
+if(msg != ""):
+    msg = msg.split("/")
+    nombre1 = int(msg[0])
+    nombre2 = int(msg[1])
+    resultat = str(calcul(nombre1, nombre2))
+    sendData("PRIVMSG !ep1 -rep "+resultat)
+    final_message = connexion_serveur.recv(2048).decode("UTF-8")
 
 
 
